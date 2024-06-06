@@ -11,5 +11,5 @@ func TestGetReq(t *testing.T) {
 	if err != nil {
 		return
 	}
-	TCHUtil.OutResponse(response)
+	TCHUtil.OutHttpResponse(response)
 }
