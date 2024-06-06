@@ -1,4 +1,4 @@
-module github.com/aurorax-neo/tls-client-httpi
+module github.com/aurorax-neo/tls_client_httpi
 
 go 1.21
 

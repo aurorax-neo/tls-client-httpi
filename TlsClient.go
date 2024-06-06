@@ -1,7 +1,6 @@
-package TlsClient
+package tls_client_httpi
 
 import (
-	"github.com/aurorax-neo/tls-client-httpi"
 	"github.com/bogdanfinn/tls-client/profiles"
 	"io"
 	"net/http"
@@ -58,7 +57,7 @@ func convertResponse(resp *fhttp.Response) *http.Response {
 	return response
 }
 
-func (TC *TlsClient) handleHeaders(req *fhttp.Request, headers tls_client_httpi.Headers) {
+func (TC *TlsClient) handleHeaders(req *fhttp.Request, headers Headers) {
 	if headers == nil {
 		return
 	}
@@ -67,7 +66,7 @@ func (TC *TlsClient) handleHeaders(req *fhttp.Request, headers tls_client_httpi.
 	}
 }
 
-func (TC *TlsClient) handleCookies(req *fhttp.Request, cookies tls_client_httpi.Cookies) {
+func (TC *TlsClient) handleCookies(req *fhttp.Request, cookies Cookies) {
 	if cookies == nil {
 		return
 	}
@@ -89,7 +88,7 @@ func (TC *TlsClient) handleCookies(req *fhttp.Request, cookies tls_client_httpi.
 	}
 }
 
-func (TC *TlsClient) Request(method tls_client_httpi.Method, url string, headers tls_client_httpi.Headers, cookies tls_client_httpi.Cookies, body io.Reader) (*http.Response, error) {
+func (TC *TlsClient) Request(method Method, url string, headers Headers, cookies Cookies, body io.Reader) (*http.Response, error) {
 	req, err := fhttp.NewRequest(string(method), url, body)
 	if err != nil {
 		return nil, err
@@ -112,7 +111,7 @@ func (TC *TlsClient) SetProxy(rawUrl string) error {
 	return TC.Client.SetProxy(rawUrl)
 }
 
-func (TC *TlsClient) SetCookies(rawUrl string, cookies tls_client_httpi.Cookies) {
+func (TC *TlsClient) SetCookies(rawUrl string, cookies Cookies) {
 	if cookies == nil {
 		return
 	}
@@ -140,13 +139,13 @@ func (TC *TlsClient) SetCookies(rawUrl string, cookies tls_client_httpi.Cookies)
 	TC.Client.GetCookieJar().SetCookies(u, fCookies)
 }
 
-func (TC *TlsClient) GetCookies(rawUrl string) tls_client_httpi.Cookies {
+func (TC *TlsClient) GetCookies(rawUrl string) Cookies {
 	currUrl, err := url.Parse(rawUrl)
 	if err != nil {
 		return nil
 	}
 
-	var cookies tls_client_httpi.Cookies
+	var cookies Cookies
 	for _, c := range TC.Client.GetCookies(currUrl) {
 		cookies = append(cookies, &http.Cookie{
 			Name:       c.Name,

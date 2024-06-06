@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-type HttpI interface {
+type TCHI interface {
 	Request(method Method, url string, headers Headers, cookies Cookies, body io.Reader) (*http.Response, error)
 	SetProxy(rawUrl string) error
 	SetCookies(rawUrl string, cookies Cookies)
