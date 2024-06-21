@@ -19,6 +19,7 @@ const (
 	POST    Method = "POST"
 	PUT     Method = "PUT"
 	HEAD    Method = "HEAD"
+	PATCH   Method = "PATCH"
 	DELETE  Method = "DELETE"
 	OPTIONS Method = "OPTIONS"
 )
