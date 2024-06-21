@@ -8,44 +8,92 @@ go get -u github.com/aurorax-neo/tls_client_httpi
 
 ### 2.get请求
 
+###### github.com/bogdanfinn/tls-client
+
+
 ```
 import (
-	"github.com/aurorax-neo/tls_client_httpi"
+	"fmt"
 	"github.com/aurorax-neo/tls_client_httpi/TCHUtil"
-	fhttp "github.com/bogdanfinn/fhttp"
-	"io"
+	"github.com/aurorax-neo/tls_client_httpi/cycle_tls"
+	"github.com/aurorax-neo/tls_client_httpi/tls_client"
+	"testing"
 )
 
-func main() {
-	c := tls_client_httpi.DefaultClient()
-	c.ReqBefore = func(req *fhttp.Request) error {
-		TCHUtil.OutFHttpRequest(req)
-		return nil
-	}
-	response, err := c.Request(tls_client_httpi.GET, "https://www.baidu.com", nil, nil, nil)
+func TestGetReq(t *testing.T) {
+	c := tls_client.DefaultClient()
+	response, err := c.Request("GET", "https://tls.browserleaks.com/json", nil, nil, nil)
 	if err != nil {
 		return
 	}
-	defer func(Body io.ReadCloser) {
-		_ = Body.Close()
-	}(response.Body)
 	TCHUtil.OutHttpResponse(response)
 }
 
 *****************************************************************************************************
 
-GET / HTTP/1.1
-Host: www.baidu.com
+HTTP/2.0 200 OK
+Access-Control-Allow-Headers: *
+Access-Control-Allow-Origin: https://browserleaks.com
+Cache-Control: no-store, no-cache, must-revalidate, max-age=0
+Content-Type: application/json
+Date: Fri, 21 Jun 2024 05:22:03 GMT
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Pragma: no-cache
+Server: nginx
+X-Content-Type-Options: nosniff
 
+{
+  "user_agent": "Go-http-client/2.0",
+  "ja3_hash": "64aff24dbef210f33880d4f62e1493dd",
+  "ja3_text": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49171-49172-156-157-47-53,27-18-23-17513-16-43-13-11-0-35-10-65037-5-65281-45-51,25497-29-23-24,0",
+  "ja3n_hash": "4c9ce26028c11d7544da00d3f7e4f45c",
+  "ja3n_text": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49171-49172-156-157-47-53,0-5-10-11-13-16-18-23-27-35-43-45-51-17513-65037-65281,25497-29-23-24,0",
+  "akamai_hash": "52d84b11737d980aef856699f885ca86",
+  "akamai_text": "1:65536;2:0;4:6291456;6:262144|15663105|0|m,a,s,p"
+}
+```
 
-HTTP/1.1 200 OK
-Content-Type: application/x-gzip
-Date: Thu, 06 Jun 2024 08:43:33 GMT
-Server: bfe
+###### github.com/Danny-Dasilva/CycleTLS/cycletls
 
-<!DOCTYPE html>
-<!--STATUS OK--><html> <head><meta http-equiv=content-type content=text/html;charset=utf-8><meta http-equiv=X-UA-Compatible content=IE=Edge><meta content=always name=referrer><link rel=stylesheet type=text/css href=https://ss1.bdstatic.com/5eN1bjq8AAUYm2zgoY3K/r/www/cache/bdorz/baidu.min.css><title>百度一下，你就知道</title></head> <body link=#0000cc> <div id=wrapper> <div id=head> <div class=head_wrapper> <div class=s_form> <div class=s_form_wrapper> <div id=lg> <img hidefocus=true src=//www.baidu.com/img/bd_logo1.png width=270 height=129> </div> <form id=form name=f action=//www.baidu.com/s class=fm> <input type=hidden name=bdorz_come value=1> <input type=hidden name=ie value=utf-8> <input type=hidden name=f value=8> <input type=hidden name=rsv_bp value=1> <input type=hidden name=rsv_idx value=1> <input type=hidden name=tn value=baidu><span class="bg s_ipt_wr"><input id=kw name=wd class=s_ipt value maxlength=255 autocomplete=off autofocus=autofocus></span><span class="bg s_btn_wr"><input type=submit id=su value=百度一下 class="bg s_btn" autofocus></span> </form> </div> </div> <div id=u1> <a href=http://news.baidu.com name=tj_trnews class=mnav>新闻</a> <a href=https://www.hao123.com name=tj_trhao123 class=mnav>hao123</a> <a href=http://map.baidu.com name=tj_trmap class=mnav>地图</a> <a href=http://v.baidu.com name=tj_trvideo class=mnav>视频</a> <a href=http://tieba.baidu.com name=tj_trtieba class=mnav>贴吧</a> <noscript> <a href=http://www.baidu.com/bdorz/login.gif?login&amp;tpl=mn&amp;u=http%3A%2F%2Fwww.baidu.com%2f%3fbdorz_come%3d1 name=tj_login class=lb>登录</a> </noscript> <script>document.write('<a href="http://www.baidu.com/bdorz/login.gif?login&tpl=mn&u='+ encodeURIComponent(window.location.href+ (window.location.search === "" ? "?" : "&")+ "bdorz_come=1")+ '" name="tj_login" class="lb">登录</a>');
-                </script> <a href=//www.baidu.com/more/ name=tj_briicon class=bri style="display: block;">更多产品</a> </div> </div> </div> <div id=ftCon> <div id=ftConw> <p id=lh> <a href=http://home.baidu.com>关于百度</a> <a href=http://ir.baidu.com>About Baidu</a> </p> <p id=cp>&copy;2017&nbsp;Baidu&nbsp;<a href=http://www.baidu.com/duty/>使用百度前必读</a>&nbsp; <a href=http://jianyi.baidu.com/ class=cp-feedback>意见反馈</a>&nbsp;京ICP证030173号&nbsp; <img src=//www.baidu.com/img/gs.gif> </p> </div> </div> </div> </body> </html>
+```
+import (
+	"fmt"
+	"github.com/aurorax-neo/tls_client_httpi/TCHUtil"
+	"github.com/aurorax-neo/tls_client_httpi/cycle_tls"
+	"github.com/aurorax-neo/tls_client_httpi/tls_client"
+	"testing"
+)
 
+func TestGetReq(t *testing.T) {
+		cc := cycle_tls.DefaultClient()
+	response, err = cc.Request("GET", "https://tls.browserleaks.com/json", nil, nil, nil)
+	if err != nil {
+		return
+	}
+	TCHUtil.OutHttpResponse(response)
+}
+*****************************************************************************************************
+
+HTTP/2.0 200 OK
+Content-Length: 692
+Access-Control-Allow-Headers: *
+Access-Control-Allow-Origin: https://browserleaks.com
+Cache-Control: no-store, no-cache, must-revalidate, max-age=0
+Content-Type: application/json
+Date: Fri, 21 Jun 2024 05:22:04 GMT
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Pragma: no-cache
+Server: nginx
+X-Content-Type-Options: nosniff
+
+{
+  "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36",
+  "ja3_hash": "fe6706a5fa93c16c76a8b6e84fa6e476",
+  "ja3_text": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49171-49172-156-157-47-53,17513-43-5-35-45-27-10-18-65281-0-23-16-51-11-13-21,29-23-24,0",
+  "ja3n_hash": "aa56c057ad164ec4fdcb7a5a283be9fc",
+  "ja3n_text": "771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49171-49172-156-157-47-53,0-5-10-11-13-16-18-21-23-27-35-43-45-51-17513-65281,29-23-24,0",
+  "akamai_hash": "4708d37c97cd9033bbaa2199b0f54c2b",
+  "akamai_text": "1:65536;3:1000;4:6291456;5:16384;6:262144|15663105|0|a,m,p,s"
+}
 ```
 
