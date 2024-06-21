@@ -1,6 +1,7 @@
-package tls_client_httpi
+package tls_client
 
 import (
+	"github.com/aurorax-neo/tls_client_httpi"
 	"github.com/bogdanfinn/tls-client/profiles"
 	"io"
 	"net/http"
@@ -35,7 +36,7 @@ func NewClient(options []tlsClient.HttpClientOption) *TlsClient {
 }
 
 func DefaultClient() *TlsClient {
-	options := NewClientOptions(600, profiles.Chrome_124)
+	options := NewClientOptions(30, profiles.Chrome_124)
 	return NewClient(options)
 }
 
@@ -57,7 +58,7 @@ func convertResponse(resp *fhttp.Response) *http.Response {
 	return response
 }
 
-func (TC *TlsClient) handleHeaders(req *fhttp.Request, headers Headers) {
+func (TC *TlsClient) handleHeaders(req *fhttp.Request, headers tls_client_httpi.Headers) {
 	if headers == nil {
 		return
 	}
@@ -66,7 +67,7 @@ func (TC *TlsClient) handleHeaders(req *fhttp.Request, headers Headers) {
 	}
 }
 
-func (TC *TlsClient) handleCookies(req *fhttp.Request, cookies Cookies) {
+func (TC *TlsClient) handleCookies(req *fhttp.Request, cookies tls_client_httpi.Cookies) {
 	if cookies == nil {
 		return
 	}
@@ -88,8 +89,8 @@ func (TC *TlsClient) handleCookies(req *fhttp.Request, cookies Cookies) {
 	}
 }
 
-func (TC *TlsClient) Request(method Method, url string, headers Headers, cookies Cookies, body io.Reader) (*http.Response, error) {
-	req, err := fhttp.NewRequest(string(method), url, body)
+func (TC *TlsClient) Request(method tls_client_httpi.Method, rawURL string, headers tls_client_httpi.Headers, cookies tls_client_httpi.Cookies, body io.Reader) (*http.Response, error) {
+	req, err := fhttp.NewRequest(string(method), rawURL, body)
 	if err != nil {
 		return nil, err
 	}
@@ -111,7 +112,7 @@ func (TC *TlsClient) SetProxy(rawUrl string) error {
 	return TC.Client.SetProxy(rawUrl)
 }
 
-func (TC *TlsClient) SetCookies(rawUrl string, cookies Cookies) {
+func (TC *TlsClient) SetCookies(rawUrl string, cookies tls_client_httpi.Cookies) {
 	if cookies == nil {
 		return
 	}
@@ -139,13 +140,13 @@ func (TC *TlsClient) SetCookies(rawUrl string, cookies Cookies) {
 	TC.Client.GetCookieJar().SetCookies(u, fCookies)
 }
 
-func (TC *TlsClient) GetCookies(rawUrl string) Cookies {
+func (TC *TlsClient) GetCookies(rawUrl string) tls_client_httpi.Cookies {
 	currUrl, err := url.Parse(rawUrl)
 	if err != nil {
 		return nil
 	}
 
-	var cookies Cookies
+	var cookies tls_client_httpi.Cookies
 	for _, c := range TC.Client.GetCookies(currUrl) {
 		cookies = append(cookies, &http.Cookie{
 			Name:       c.Name,

@@ -6,7 +6,7 @@ import (
 )
 
 type TCHI interface {
-	Request(method Method, url string, headers Headers, cookies Cookies, body io.Reader) (*http.Response, error)
+	Request(method Method, rawURL string, headers Headers, cookies Cookies, body io.Reader) (*http.Response, error)
 	SetProxy(rawUrl string) error
 	SetCookies(rawUrl string, cookies Cookies)
 	GetCookies(rawUrl string) Cookies
@@ -19,6 +19,7 @@ const (
 	POST    Method = "POST"
 	PUT     Method = "PUT"
 	HEAD    Method = "HEAD"
+	PATCH   Method = "PATCH"
 	DELETE  Method = "DELETE"
 	OPTIONS Method = "OPTIONS"
 )
