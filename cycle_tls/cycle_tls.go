@@ -1,9 +1,9 @@
 package cycle_tls
 
 import (
-	"github.com/Danny-Dasilva/CycleTLS/cycletls"
-	fhttp "github.com/Danny-Dasilva/fhttp"
 	"github.com/aurorax-neo/tls_client_httpi"
+	"github.com/aurorax-neo/tls_client_httpi/cycletls"
+	fhttp "github.com/aurorax-neo/tls_client_httpi/cycletls_fhttp"
 	"golang.org/x/net/context"
 	"golang.org/x/net/proxy"
 	"io"
