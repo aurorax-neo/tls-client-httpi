@@ -65,7 +65,7 @@ import (
 )
 
 func TestGetReq(t *testing.T) {
-		cc := cycle_tls.DefaultClient()
+	cc := cycle_tls.DefaultClient()
 	response, err = cc.Request("GET", "https://tls.browserleaks.com/json", nil, nil, nil)
 	if err != nil {
 		return
