@@ -2,13 +2,11 @@ package tls_client
 
 import (
 	"github.com/aurorax-neo/tls_client_httpi"
+	fhttp "github.com/bogdanfinn/fhttp"
+	tlsClient "github.com/bogdanfinn/tls-client"
 	"github.com/bogdanfinn/tls-client/profiles"
 	"io"
 	"net/http"
-	"net/url"
-
-	fhttp "github.com/bogdanfinn/fhttp"
-	tlsClient "github.com/bogdanfinn/tls-client"
 )
 
 type TlsClient struct {
@@ -18,12 +16,11 @@ type TlsClient struct {
 
 type handler func(req *fhttp.Request) error
 
-func NewClientOptions(timeoutSeconds int, clientProfile profiles.ClientProfile) []tlsClient.HttpClientOption {
+func NewClientOptions(timeOutSec int, profile profiles.ClientProfile) []tlsClient.HttpClientOption {
 	return []tlsClient.HttpClientOption{
 		tlsClient.WithCookieJar(tlsClient.NewCookieJar()),
-		tlsClient.WithNotFollowRedirects(),
-		tlsClient.WithTimeoutSeconds(timeoutSeconds),
-		tlsClient.WithClientProfile(clientProfile),
+		tlsClient.WithTimeoutSeconds(timeOutSec),
+		tlsClient.WithClientProfile(profile),
 	}
 }
 
@@ -112,54 +109,14 @@ func (TC *TlsClient) SetProxy(rawUrl string) error {
 	return TC.Client.SetProxy(rawUrl)
 }
 
-func (TC *TlsClient) SetCookies(rawUrl string, cookies tls_client_httpi.Cookies) {
-	if cookies == nil {
-		return
-	}
-	u, err := url.Parse(rawUrl)
-	if err != nil {
-		return
-	}
-	var fCookies []*fhttp.Cookie
-	for _, c := range cookies {
-		fCookies = append(fCookies, &fhttp.Cookie{
-			Name:       c.Name,
-			Value:      c.Value,
-			Path:       c.Path,
-			Domain:     c.Domain,
-			Expires:    c.Expires,
-			RawExpires: c.RawExpires,
-			MaxAge:     c.MaxAge,
-			Secure:     c.Secure,
-			HttpOnly:   c.HttpOnly,
-			SameSite:   fhttp.SameSite(c.SameSite),
-			Raw:        c.Raw,
-			Unparsed:   c.Unparsed,
-		})
-	}
-	TC.Client.GetCookieJar().SetCookies(u, fCookies)
+func (TC *TlsClient) GetProxy() string {
+	return TC.Client.GetProxy()
 }
 
-func (TC *TlsClient) GetCookies(rawUrl string) tls_client_httpi.Cookies {
-	currUrl, err := url.Parse(rawUrl)
-	if err != nil {
-		return nil
-	}
+func (TC *TlsClient) SetFollowRedirect(followRedirect bool) {
+	TC.Client.SetFollowRedirect(followRedirect)
+}
 
-	var cookies tls_client_httpi.Cookies
-	for _, c := range TC.Client.GetCookies(currUrl) {
-		cookies = append(cookies, &http.Cookie{
-			Name:       c.Name,
-			Value:      c.Value,
-			Path:       c.Path,
-			Domain:     c.Domain,
-			Expires:    c.Expires,
-			RawExpires: c.RawExpires,
-			MaxAge:     c.MaxAge,
-			Secure:     c.Secure,
-			HttpOnly:   c.HttpOnly,
-			SameSite:   http.SameSite(c.SameSite),
-		})
-	}
-	return cookies
+func (TC *TlsClient) GetFollowRedirect() bool {
+	return TC.Client.GetFollowRedirect()
 }
